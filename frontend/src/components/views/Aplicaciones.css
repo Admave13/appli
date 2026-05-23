@@ -1,0 +1,123 @@
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filters button {
+  background: var(--bg-secondary, #f0f0f0);
+  border: 1px solid var(--border-color, #e0e0e0);
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.filters button.active, .filters button:hover {
+  background: var(--accent-color, #0066ff);
+  color: white;
+  border-color: var(--accent-color, #0066ff);
+}
+
+.applications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.app-card {
+  background: white;
+  border: 1px solid var(--border-color, #eee);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.app-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.company-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.app-logo, .app-logo-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.app-logo-placeholder {
+  background: #e2e8f0;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.company-info h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+}
+
+.company-name {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.app-card-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 12px;
+}
+
+.time-ago {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-enviada { background: #e0f2fe; color: #0284c7; }
+.status-esperando-respuesta { background: #fef08a; color: #854d0e; }
+.status-entrevista { background: #dcfce7; color: #166534; }
+.status-prueba-tecnica { background: #fae8ff; color: #86198f; }
+.status-finalizada { background: #f1f5f9; color: #475569; }
+
+.app-event-info {
+  background: #f8fafc;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #334155;
+  border-left: 3px solid var(--accent-color, #0066ff);
+}
+
+.mr-auto { margin-right: auto; }
+.animate-fade { animation: fadeIn 0.3s ease-in-out; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

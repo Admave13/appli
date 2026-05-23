@@ -1,0 +1,423 @@
+/* ── Page header ─────────────────────────────────────────────────── */
+.perfil {
+  max-width: 760px;
+}
+
+.page-header {
+  margin-bottom: 36px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.sections-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Accordion ───────────────────────────────────────────────────── */
+.accordion {
+  border-bottom: 1.5px solid var(--border);
+}
+
+.accordion-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.accordion-header:hover .accordion-title {
+  opacity: 0.7;
+}
+
+.accordion-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  transition: opacity 0.15s;
+}
+
+.accordion-chevron {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-family: monospace;
+  transform: rotate(0deg);
+  transition: transform 0.2s;
+  display: inline-block;
+  user-select: none;
+}
+
+.accordion-chevron--open {
+  transform: rotate(180deg);
+}
+
+.accordion-body {
+  padding-bottom: 24px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+.btn-copy {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--btn-copy-bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.btn-copy:hover {
+  background: var(--btn-copy-hover);
+  color: var(--text-primary);
+}
+
+.btn-copy--done {
+  background: #d0f0c0;
+  color: #2a7a2a;
+  border-color: #a0d0a0;
+}
+
+.btn-save {
+  padding: 7px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--sidebar-bg);
+  color: var(--text-primary);
+  border: none;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.btn-save:hover { background: #b8d830; }
+.btn-save:active { transform: scale(0.98); }
+.btn-save--done { background: #d0f0c0; color: #2a7a2a; }
+
+.btn-cancel {
+  padding: 7px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  background: #eee;
+  color: #555;
+  border: none;
+  transition: background 0.15s;
+}
+.btn-cancel:hover { background: #ddd; }
+
+.btn-danger {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--btn-danger-bg);
+  color: var(--btn-danger-color);
+  border: none;
+  transition: background 0.15s;
+}
+.btn-danger:hover { background: #ffcece; }
+
+.btn-danger-sm {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--btn-danger-bg);
+  color: var(--btn-danger-color);
+  border: 1px solid #ffcece;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.btn-danger-sm:hover { background: #ffcece; }
+
+.btn-edit {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #e8efd8;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.btn-edit:hover { background: var(--btn-copy-hover); }
+
+.btn-add-field {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1.5px dashed var(--border);
+  color: var(--text-secondary);
+  background: transparent;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-add-field:hover {
+  border-color: var(--green-accent);
+  color: var(--text-primary);
+}
+
+.btn-add-entry {
+  margin-top: 12px;
+  padding: 9px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1.5px dashed var(--border);
+  color: var(--text-secondary);
+  background: transparent;
+  transition: border-color 0.15s, color 0.15s;
+  width: 100%;
+}
+.btn-add-entry:hover {
+  border-color: var(--green-accent);
+  color: var(--text-primary);
+  background: rgba(200,230,60,0.08);
+}
+
+/* ── Personal info ───────────────────────────────────────────────── */
+.personal-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.personal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.personal-field-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.field-label-input {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 2px 0;
+  flex: 1;
+}
+
+.btn-remove-field {
+  font-size: 16px;
+  color: #ccc;
+  background: none;
+  border: none;
+  line-height: 1;
+  padding: 0 4px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.btn-remove-field:hover { color: var(--btn-danger-color); }
+
+.personal-field-value-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-value-input {
+  flex: 1;
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--card-bg);
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.field-value-input:focus { border-color: var(--green-accent); }
+
+.personal-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* ── Entry cards ─────────────────────────────────────────────────── */
+.entry-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.entry-card {
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+
+.entry-card--editing {
+  background: #fbffe8;
+  border-color: var(--green-accent);
+}
+
+.entry-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  gap: 16px;
+}
+
+.entry-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.entry-date {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.entry-content {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  white-space: pre-wrap;
+}
+
+.entry-company {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  margin-top: -4px;
+}
+
+.entry-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Edit form inputs inside entry cards */
+.entry-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 7px;
+  border: 1.5px solid var(--border);
+  background: var(--card-bg);
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  margin-bottom: 8px;
+  transition: border-color 0.15s;
+}
+.entry-input:focus { border-color: var(--green-accent); }
+.entry-input--title { font-weight: 600; }
+.entry-input--company {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.entry-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 7px;
+  border: 1.5px solid var(--border);
+  background: var(--card-bg);
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  min-height: 72px;
+  margin-bottom: 8px;
+  transition: border-color 0.15s;
+  font-family: var(--font);
+  box-sizing: border-box;
+}
+.entry-textarea:focus { border-color: var(--green-accent); }
+
+.entry-edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Skills ──────────────────────────────────────────────────────── */
+.skills-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skills-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--btn-copy-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.skill-remove {
+  font-size: 14px;
+  color: #aaa;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.skill-remove:hover { color: var(--btn-danger-color); }
+
+/* ── Misc ────────────────────────────────────────────────────────── */
+.loading {
+  color: var(--text-secondary);
+  font-size: 13px;
+  padding: 12px 0;
+}

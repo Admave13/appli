@@ -1,0 +1,11 @@
+frontend/node_modules/
+.env
+.venv/
+__pycache__/
+backend/__pycache__/
+core/__pycache__/
+frontend/dist/
+data/*.db
+data/cvs/*
+data/covers/*
+data/logos/*

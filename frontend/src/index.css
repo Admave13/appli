@@ -1,0 +1,54 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --sidebar-bg: #C8E63C;
+  --sidebar-active-color: #0E1A00;
+  --sidebar-inactive-color: #4A5E10;
+  --main-bg: #F1F5E4;
+  --text-primary: #1A2000;
+  --text-secondary: #4A5E10;
+  --border: #D4E090;
+  --card-bg: #FFFFFF;
+  --green-accent: #8BBF00;
+  --btn-copy-bg: #E8F5A0;
+  --btn-copy-hover: #D4E870;
+  --btn-danger-bg: #FFE8E8;
+  --btn-danger-color: #CC3333;
+  --input-bg: #FAFFF0;
+  --font: 'DM Sans', sans-serif;
+  --font-display: 'DM Serif Display', serif;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--main-bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: var(--font);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, textarea {
+  font-family: var(--font);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
