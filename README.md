@@ -1,52 +1,52 @@
 # appli.
 
-Proyecto de fin de semana para gestionar todo lo que necesitas cuando estás buscando trabajo: tu perfil profesional, CVs, cover letters generadas con IA y el seguimiento de tus candidaturas, todo en un mismo sitio.
+A weekend project to manage everything you need when looking for a job: your professional profile, CVs, AI-generated cover letters, and application tracking — all in one place.
 
-**Stack:** React + FastAPI · SQLite · Soporte para Gemini, Groq, Anthropic y OpenAI.
+**Stack:** React + FastAPI · SQLite · Supports Gemini, Groq, Anthropic and OpenAI.
 
 ---
 
-## Estructura
+## Structure
 
 ```
 appli/
-├── api.py              ← FastAPI (backend REST)
-├── start.py            ← Script de arranque en desarrollo
-├── config.py           ← Configuración (.env)
+├── api.py              ← FastAPI (REST backend)
+├── start.py            ← Dev startup script
+├── config.py           ← Configuration (.env)
 ├── requirements.txt
-├── backend/            ← Lógica de IA (Gemini, Claude, OpenAI, Groq)
-├── core/               ← SQLite, scraper, exportación DOCX/PDF
-├── dist/               ← Ejecutable compilado (api.exe / api)
-└── frontend/           ← App React (Vite)
+├── backend/            ← AI logic (Gemini, Claude, OpenAI, Groq)
+├── core/               ← SQLite, scraper, DOCX/PDF export
+├── dist/               ← Compiled executable (api.exe / api)
+└── frontend/           ← React app (Vite)
 ```
 
 ---
 
-## Instalación desde los archivos fuente (build manual)
+## Building from source
 
-Si no quieres usar la release precompilada, puedes construir la app de escritorio tú mismo siguiendo estos pasos. El resultado es una app nativa de Electron con el backend Python embebido.
+If you don't want to use the prebuilt release, you can build the desktop app yourself. The result is a native Electron app with the Python backend embedded.
 
-### Requisitos previos
+### Prerequisites
 
-- Node.js 18 o superior
-- Python 3.10 o superior
-
----
-
-### Paso 1 — Limpiar datos sensibles
-
-Antes de compilar, asegúrate de que no hay datos personales en los archivos:
-
-- Elimina `.env` (conserva solo `.env.example`)
-- Elimina `data/jobsearch.db`
-- Vacía las carpetas `data/cvs/`, `data/covers/` y `data/logos/`
-- Elimina cualquier carpeta `__pycache__`
+- Node.js 18 or higher
+- Python 3.10 or higher
 
 ---
 
-### Paso 2 — Compilar el frontend (React + Vite)
+### Step 1 — Clean sensitive data
 
-Vite compila por defecto con rutas absolutas, pero Electron necesita rutas relativas para cargar los archivos via `file://`. Abre `frontend/vite.config.js` y reemplaza su contenido con esto:
+Before building, make sure no personal data is included:
+
+- Delete `.env` (keep only `.env.example`)
+- Delete `data/jobsearch.db`
+- Empty the folders `data/cvs/`, `data/covers/` and `data/logos/`
+- Delete any `__pycache__` folders
+
+---
+
+### Step 2 — Build the frontend (React + Vite)
+
+Vite defaults to absolute paths, but Electron needs relative paths to load files via `file://`. Open `frontend/vite.config.js` and replace its contents with:
 
 ```js
 import { defineConfig } from 'vite'
@@ -54,7 +54,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: './',  // Crítico para que Electron cargue los recursos correctamente
+  base: './',  // Critical: allows Electron to load assets via file://
   server: {
     port: 3000,
     proxy: {
@@ -67,31 +67,31 @@ export default defineConfig({
 })
 ```
 
-Luego, desde la carpeta `frontend/`:
+Then, from the `frontend/` folder:
 
 ```bash
 npm install
 npm run build
 ```
 
-Esto genera la carpeta `frontend/dist/` con la web lista.
+This generates `frontend/dist/` with the compiled web app.
 
 ---
 
-### Paso 3 — Compilar el backend (FastAPI → ejecutable)
+### Step 3 — Build the backend (FastAPI → executable)
 
-Desde la raíz del proyecto:
+From the project root:
 
 ```bash
-# Crear y activar entorno virtual
+# Create and activate virtual environment
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 
-# Instalar dependencias
+# Install dependencies
 pip install -r requirements.txt
 pip install pyinstaller python-multipart
 
-# Compilar el ejecutable
+# Build the executable
 pyinstaller --onefile --name api \
   --hidden-import uvicorn.logging \
   --hidden-import uvicorn.loops.auto \
@@ -101,29 +101,29 @@ pyinstaller --onefile --name api \
   api.py
 ```
 
-El ejecutable `api.exe` (o `api` en Mac/Linux) quedará en la carpeta `dist/`.
+The `api.exe` (or `api` on Mac/Linux) will be generated in the `dist/` folder.
 
 ---
 
-### Paso 4 — Montar el proyecto Electron
+### Step 4 — Set up the Electron project
 
-Crea una carpeta `appli-electron/` al mismo nivel que `appli/` y dentro una subcarpeta `dist-python/`. Copia el ejecutable generado en el paso anterior ahí dentro:
+Create an `appli-electron/` folder at the same level as `appli/`, with a `dist-python/` subfolder inside. Copy the executable from the previous step into it:
 
 ```
 appli-electron/
 ├── dist-python/
-│   └── api.exe          ← (o 'api' en Mac/Linux)
+│   └── api.exe          ← (or 'api' on Mac/Linux)
 ├── main.js
 └── package.json
 ```
 
-Crea `appli-electron/package.json`:
+Create `appli-electron/package.json`:
 
 ```json
 {
   "name": "appli",
   "version": "1.0.0",
-  "description": "Asistente de búsqueda de empleo",
+  "description": "Job search assistant",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -161,7 +161,7 @@ Crea `appli-electron/package.json`:
 }
 ```
 
-Crea `appli-electron/main.js`:
+Create `appli-electron/main.js`:
 
 ```js
 const { app, BrowserWindow, session } = require('electron')
@@ -231,25 +231,25 @@ app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(
 
 ---
 
-### Paso 5 — Probar y empaquetar
+### Step 5 — Test and package
 
-Desde la carpeta `appli-electron/`:
+From the `appli-electron/` folder:
 
 ```bash
-# Instalar dependencias de Electron
+# Install Electron dependencies
 npm install
 
-# Probar en modo desarrollo
+# Test in development mode
 npm start
 
-# Generar el instalador final
+# Build the final installer
 npm run dist
 ```
 
-El instalador quedará en `appli-electron/dist/`.
+The distributable installer will be ready in `appli-electron/dist/`.
 
 ---
 
-## Licencia
+## License
 
 MIT
