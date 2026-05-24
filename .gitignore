@@ -9,3 +9,6 @@ data/*.db
 data/cvs/*
 data/covers/*
 data/logos/*
+build/
+dist/
+*.exe

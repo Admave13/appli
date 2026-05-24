@@ -57,6 +57,13 @@ class CoverGenerateIn(BaseModel):
     extra_notes: str = ""
 
 
+# Añadir junto a los otros modelos Pydantic (arriba del todo)
+class CompanyIn(BaseModel):
+    name: str
+    url: str = ""
+    logo_path: str = ""
+    notes: str = ""
+
 class CoverUpdateIn(BaseModel):
     title: str
     content: str
@@ -365,15 +372,18 @@ def download_cv_pdf(cv_id: int):
 #----
 @app.get("/api/companies")
 def get_companies():
-    # Necesario para el selector de empresas en el modal de Aplicaciones
     return dm.get_companies()
 
-# NUEVO: Endpoint para actualizar una empresa (Editar)
+@app.post("/api/companies")
+def create_company(data: CompanyIn):
+    saved = dm.save_company(data.model_dump())
+    return saved
+
 @app.put("/api/companies/{company_id}")
-def update_company(company_id: int, data: dict):
-    # Aseguramos que el ID de la URL se inyecte en los datos que procesa el data_manager
-    data["id"] = company_id
-    saved = dm.save_company(data)
+def update_company(company_id: int, data: CompanyIn):
+    payload = data.model_dump()
+    payload["id"] = company_id
+    saved = dm.save_company(payload)
     return saved
 
 # NUEVO: Endpoint para eliminar una empresa
@@ -388,12 +398,12 @@ def delete_company(company_id: int):
     dm.delete_company(company_id)
     return {"ok": True}
 
-#__________________________________
+@app.put("/api/companies/{company_id}/visit")
+def visit_company(company_id: int):
+    dm.update_company_last_visited(company_id)
+    return {"ok": True}
 
-@app.get("/api/applications")
-def get_applications():
-    apps = dm.get_applications()
-    return [app_to_dict(a) for a in apps]
+#__________________________________
 
 @app.get("/api/applications")
 def get_applications():
