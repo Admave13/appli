@@ -37,8 +37,7 @@ appli/
 │
 ├── core/
 │   ├── data_manager.py     ← Persistence layer (SQLite + SQLAlchemy)
-│   ├── scraper.py          ← Job offer extractor from URLs
-│   ├── cv_builder.py       ← CV export to PDF/DOCX
+│   ├── cv_builder.py       ← CV/Cover Letter export to PDF/DOCX
 │   └── doc_editor.py       ← DOCX document generation utilities
 │
 └── frontend/               ← React app (Vite)
