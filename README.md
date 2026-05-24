@@ -1,255 +1,169 @@
 # appli.
 
-A weekend project to manage everything you need when looking for a job: your professional profile, CVs, AI-generated cover letters, and application tracking — all in one place.
+> Manage everything you need during your job search: professional profile, CVs, AI-generated cover letters, and application tracking — all in one place.
 
-**Stack:** React + FastAPI · SQLite · Supports Gemini, Groq, Anthropic and OpenAI.
+**Stack:** React 19 + FastAPI · SQLite · Multi-provider AI (Gemini, Groq, Anthropic, OpenAI)
 
 ---
 
-## Structure
+## What is appli.?
+
+**appli.** is a local web app that centralizes your entire job search process. Build a modular professional profile, generate tailored CVs and cover letters with AI, track companies you're interested in, and keep a full log of every application you send.
+
+### Features
+
+- **Professional profile** — Manage modular sections (experience, education, projects, skills…) with tags and date ranges.
+- **AI-powered cover letters** — Generate personalized cover letters from your profile and a job description. Edit the result and export to PDF/DOCX.
+- **CV management** — Upload your own PDFs or generate CVs tailored to a specific offer.
+- **Company tracking** — Save logos, URLs and notes for companies you're targeting.
+- **Application tracking** — Log every application with its status (Sent, Interview, Technical test, Finished…), dates and notes.
+- **Job offer scraper** — Extract offers from any job board URL using AI parsing or local heuristics.
+
+---
+
+## Project structure
 
 ```
 appli/
-├── api.py              ← FastAPI (REST backend)
-├── start.py            ← Dev startup script
-├── config.py           ← Configuration (.env)
-├── requirements.txt
-├── backend/            ← AI logic (Gemini, Claude, OpenAI, Groq)
-├── core/               ← SQLite, scraper, DOCX/PDF export
-├── dist/               ← Compiled executable (api.exe / api)
-└── frontend/           ← React app (Vite)
+├── api.py                  ← REST backend (FastAPI)
+├── start.py                ← Dev startup script
+├── config.py               ← Global config (reads .env)
+├── requirements.txt        ← Python dependencies
+├── .env.example            ← Environment variables template
+│
+├── backend/
+│   ├── base.py             ← Data models + abstract BaseBackend interface
+│   └── ai_backend.py       ← AI implementation (Claude, GPT, Gemini, Groq)
+│
+├── core/
+│   ├── data_manager.py     ← Persistence layer (SQLite + SQLAlchemy)
+│   ├── scraper.py          ← Job offer extractor from URLs
+│   ├── cv_builder.py       ← CV export to PDF/DOCX
+│   └── doc_editor.py       ← DOCX document generation utilities
+│
+└── frontend/               ← React app (Vite)
+    ├── index.html
+    ├── package.json
+    ├── vite.config.js
+    └── src/
+        ├── App.jsx                     ← Main router + app shell
+        └── components/
+            ├── Sidebar.jsx             ← Side navigation
+            └── views/
+                ├── Inicio.jsx          ← Home dashboard
+                ├── Perfil.jsx          ← Professional profile
+                ├── CVs.jsx             ← CV repository
+                ├── Covers.jsx          ← Cover letters
+                ├── Empresas.jsx        ← Company tracking
+                ├── Aplicaciones.jsx    ← Application tracker
+                └── Configuracion.jsx   ← Settings
 ```
 
 ---
 
-## Building from source
+## Architecture
 
-If you don't want to use the prebuilt release, you can build the desktop app yourself. The result is a native Electron app with the Python backend embedded.
-
-### Prerequisites
-
-- Node.js 18 or higher
-- Python 3.10 or higher
-
----
-
-### Step 1 — Clean sensitive data
-
-Before building, make sure no personal data is included:
-
-- Delete `.env` (keep only `.env.example`)
-- Delete `data/jobsearch.db`
-- Empty the folders `data/cvs/`, `data/covers/` and `data/logos/`
-- Delete any `__pycache__` folders
-
----
-
-### Step 2 — Build the frontend (React + Vite)
-
-Vite defaults to absolute paths, but Electron needs relative paths to load files via `file://`. Open `frontend/vite.config.js` and replace its contents with:
-
-```js
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
-export default defineConfig({
-  plugins: [react()],
-  base: './',  // Critical: allows Electron to load assets via file://
-  server: {
-    port: 3000,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: true
-      }
-    }
-  }
-})
+```
+┌─────────────────────────────────────────────────┐
+│               Frontend (React + Vite)            │
+│  Home · Profile · CVs · Covers · Companies ·    │
+│  Applications · Settings                        │
+└──────────────────────┬──────────────────────────┘
+                       │ HTTP REST  /api/*
+┌──────────────────────▼──────────────────────────┐
+│              Backend (FastAPI)  api.py           │
+└────────┬───────────────────────┬────────────────┘
+         │                       │
+┌────────▼────────┐   ┌──────────▼──────────────┐
+│  DataManager    │   │       AIBackend          │
+│  SQLite +       │   │  Gemini · Groq ·         │
+│  SQLAlchemy     │   │  Claude · OpenAI         │
+└─────────────────┘   └─────────────────────────-┘
 ```
 
-Then, from the `frontend/` folder:
+### Data models
+
+| Model | Description |
+|---|---|
+| `ProfileSection` | Profile entry (category, title, content, company, date range, tags) |
+| `CVDocument` | CV document — editable Markdown or uploaded PDF |
+| `CoverLetter` | Cover letter with paths to generated DOCX and PDF |
+| `JobOffer` | Scraped or manual job offer with match score |
+| `JobApplication` | Application with status, company, position and dates |
+
+---
+
+## Setup
+
+### Requirements
+
+- Python 3.10+
+- Node.js 18+
+
+### 1. Clone and install Python dependencies
 
 ```bash
-npm install
-npm run build
-```
+git clone https://github.com/your-username/appli.git
+cd appli
 
-This generates `frontend/dist/` with the compiled web app.
-
----
-
-### Step 3 — Build the backend (FastAPI → executable)
-
-From the project root:
-
-```bash
-# Create and activate virtual environment
 python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-
-# Install dependencies
+source .venv/bin/activate       # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-pip install pyinstaller python-multipart
-
-# Build the executable
-pyinstaller --onefile --name api \
-  --hidden-import uvicorn.logging \
-  --hidden-import uvicorn.loops.auto \
-  --hidden-import uvicorn.protocols.http.auto \
-  --hidden-import uvicorn.protocols.websockets.auto \
-  --hidden-import multipart \
-  api.py
 ```
 
-The `api.exe` (or `api` on Mac/Linux) will be generated in the `dist/` folder.
-
----
-
-### Step 4 — Set up the Electron project
-
-Create an `appli-electron/` folder at the same level as `appli/`, with a `dist-python/` subfolder inside. Copy the executable from the previous step into it:
-
-```
-appli-electron/
-├── dist-python/
-│   └── api.exe          ← (or 'api' on Mac/Linux)
-├── main.js
-└── package.json
-```
-
-Create `appli-electron/package.json`:
-
-```json
-{
-  "name": "appli",
-  "version": "1.0.0",
-  "description": "Job search assistant",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "dist": "electron-builder"
-  },
-  "build": {
-    "appId": "com.tuapp.appli",
-    "productName": "appli",
-    "asar": true,
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "main.js",
-      {
-        "from": "../appli/frontend/dist",
-        "to": "frontend/dist"
-      }
-    ],
-    "extraResources": [
-      {
-        "from": "dist-python",
-        "to": ".",
-        "filter": ["api.exe", "api"]
-      }
-    ],
-    "win": {
-      "target": "nsis"
-    }
-  },
-  "devDependencies": {
-    "electron": "^29.0.0",
-    "electron-builder": "^24.9.1"
-  }
-}
-```
-
-Create `appli-electron/main.js`:
-
-```js
-const { app, BrowserWindow, session } = require('electron')
-const { spawn } = require('child_process')
-const path = require('path')
-const fs = require('fs')
-
-let backendProcess = null
-
-function startBackend() {
-  const isDev = !app.isPackaged
-
-  const apiExePath = isDev
-    ? path.join(__dirname, 'dist-python', process.platform === 'win32' ? 'api.exe' : 'api')
-    : path.join(process.resourcesPath, process.platform === 'win32' ? 'api.exe' : 'api')
-
-  const userDataPath = app.getPath('userData')
-  const dataDir = path.join(userDataPath, 'data')
-
-  ;[dataDir, path.join(dataDir, 'cvs'), path.join(dataDir, 'covers'), path.join(dataDir, 'logos')]
-    .forEach(dir => { if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }) })
-
-  backendProcess = spawn(apiExePath, [], {
-    cwd: userDataPath,
-    env: { ...process.env }
-  })
-
-  backendProcess.stdout.on('data', d => console.log(`[FastAPI] ${d}`))
-  backendProcess.stderr.on('data', d => console.error(`[FastAPI Error] ${d}`))
-}
-
-function createWindow() {
-  const win = new BrowserWindow({
-    width: 1280,
-    height: 800,
-    autoHideMenuBar: true,
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true
-    }
-  })
-
-  session.defaultSession.webRequest.onBeforeRequest(
-    { urls: ['file://*/*/api/*'] },
-    (details, callback) => {
-      const newUrl = details.url.replace(/file:\/\/.*\/api\//, 'http://localhost:8000/api/')
-      callback({ redirectURL: newUrl })
-    }
-  )
-
-  const isDev = !app.isPackaged
-  const indexPath = isDev
-    ? path.join(__dirname, '../appli/frontend/dist/index.html')
-    : path.join(__dirname, 'frontend/dist/index.html')
-
-  setTimeout(() => win.loadFile(indexPath), 2500)
-}
-
-app.whenReady().then(() => {
-  startBackend()
-  createWindow()
-})
-
-app.on('will-quit', () => { if (backendProcess) backendProcess.kill() })
-app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit() })
-```
-
----
-
-### Step 5 — Test and package
-
-From the `appli-electron/` folder:
+### 2. Configure environment variables
 
 ```bash
-# Install Electron dependencies
-npm install
-
-# Test in development mode
-npm start
-
-# Build the final installer
-npm run dist
+cp .env.example .env
 ```
 
-The distributable installer will be ready in `appli-electron/dist/`.
+Open `.env` and add your preferred AI provider key:
+
+```env
+AI_PROVIDER=gemini
+AI_MODEL=gemini-2.0-flash
+
+GEMINI_API_KEY=your_key_here
+GROQ_API_KEY=
+ANTHROPIC_API_KEY=
+OPENAI_API_KEY=
+
+DB_PATH=data/jobsearch.db
+```
+
+> The API key and provider can also be changed at any time from the **Settings** view in the UI — no need to touch files.
+
+### 3. Run in development mode
+
+```bash
+python start.py
+```
+
+This starts both processes automatically:
+
+- **Backend** → `http://localhost:8000` (FastAPI with hot-reload)
+- **Frontend** → `http://localhost:3000` (Vite HMR)
+
+Press `Ctrl+C` to stop everything.
+
+---
+
+## Tech stack
+
+**Backend**
+- [FastAPI](https://fastapi.tiangolo.com/) — Modern async REST framework
+- [SQLAlchemy](https://www.sqlalchemy.org/) — ORM for SQLite
+- [python-docx](https://python-docx.readthedocs.io/) — Word document generation
+- [ReportLab](https://www.reportlab.com/) — PDF export
+- [BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/) — Job offer scraping
+- [Uvicorn](https://www.uvicorn.org/) — ASGI server
+
+**Frontend**
+- [React 19](https://react.dev/) — UI
+- [Vite 8](https://vitejs.dev/) — Bundler and dev server
 
 ---
 
 ## License
 
-MIT
+MIT — see [LICENSE](./LICENSE) for details.
